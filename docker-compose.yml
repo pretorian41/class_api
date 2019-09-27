@@ -24,7 +24,10 @@ services:
     volumes:
       - ./project:/var/www
   nginx:
-    image: nginx:1.15.3-alpine
+    build: nginx
+    ports:
+      - "82:82"
+      - "80:80"
     restart: on-failure
     depends_on:
       - php
