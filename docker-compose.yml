@@ -1,0 +1,36 @@
+# docker-compose.yml
+version: "3.7"
+services:
+  db:
+    image: mysql:8.0
+    restart: on-failure
+    ports:
+      - "3306:3306"
+    volumes:
+      - /var/www:/var/www
+    command: ['--default-authentication-plugin=mysql_native_password']
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+  php:
+    build:
+      args:
+        USER_EMAIL: ${USER_EMAIL}
+        USER_NAME: ${USER_NAME}
+      context: .
+      dockerfile: php/Dockerfile
+    restart: on-failure
+    user: ${LOCAL_USER}
+    volumes:
+      - ./project:/var/www
+  nginx:
+    image: nginx:1.15.3-alpine
+    restart: on-failure
+    depends_on:
+      - php
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db:mysql
+    environment:
+      PMA_HOSTS: db
