@@ -3,7 +3,7 @@ version:  "3.7"
 services:
   php:
     volumes:
-      - "./project/class/:/usr/src/app"
+      - "./project/:/usr/src/app"
 
   nginx:
     volumes:

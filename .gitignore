@@ -48,3 +48,8 @@
 /.web-server-pid
 .idea
 .env
+#webserwer log
+logs/nginx/*
+project/class/vendor/*
+project/class/var/cache/*
+project/class/var/logs/*

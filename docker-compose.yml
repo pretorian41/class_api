@@ -20,6 +20,8 @@ services:
       context: .
       dockerfile: php/Dockerfile
     restart: on-failure
+    links:
+      - db:mysql
     user: ${LOCAL_USER}
     volumes:
       - ./project:/var/www
