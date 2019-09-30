@@ -5,62 +5,146 @@ namespace App\Controller;
 use App\Entity\AppClass;
 use App\Form\AppClassType;
 use App\Repository\AppClassRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Swagger\Annotations as SWG;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 
 /**
  * @Route("/app/class")
  */
-class AppClassController extends AbstractController
+class AppClassController extends AbstractFOSRestController
 {
     /**
-     * @Route("/", name="app_class_index", methods={"GET"})
+     * @param AppClassRepository $appClassRepository
+     *
+     * @return Response
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="success",
+     * ),
+     *
+     * @Route("/", name="app_class_list", methods={"GET"})
      */
     public function index(AppClassRepository $appClassRepository): Response
     {
-        return $this->render('app_class/index.html.twig', [
-            'app_classes' => $appClassRepository->findAll(),
-        ]);
+        return $this->handleView($this->view($appClassRepository->findAll()));
     }
 
     /**
-     * @Route("/new", name="app_class_new", methods={"GET","POST"})
+     * @param Request $request
+     *
+     * @return Response
+     *
+     * @Route("/new", name="app_class_new", methods={"POST"})
+     *
+     * @SWG\Post(
+     *     path="/app/class/new",
+     *     produces={"application/json"},
+     *     @SWG\Parameter(
+     *         name="name",
+     *         in="formData",
+     *         description="name",
+     *         type="string",
+     *     ),
+     *     @SWG\Parameter(
+     *         name="active",
+     *         in="formData",
+     *         description="active",
+     *         type="boolean",
+     *     ),
+     *     @SWG\Parameter(
+     *         name="creationDate",
+     *         in="formData",
+     *         description="creationDate",
+     *         type="string",
+     *         format="yyyy-MM-dd HH:mm"
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Success"
+     *     ),
+     *     @SWG\Response(
+     *         response=400,
+     *         description="form not valid"
+     *     )
+     * )
      */
     public function new(Request $request): Response
     {
         $appClass = new AppClass();
         $form = $this->createForm(AppClassType::class, $appClass);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($appClass);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_class_index');
+            return $this->handleView($this->view(
+                ['status' => 'ok'],
+                Response::HTTP_CREATED
+            ));
         }
 
-        return $this->render('app_class/new.html.twig', [
-            'app_class' => $appClass,
-            'form' => $form->createView(),
-        ]);
+        return $this->handleView($this->view($form->getErrors(), 400));
     }
 
     /**
+     * @param AppClass $appClass
+     *
+     * @return Response
+     *
      * @Route("/{id}", name="app_class_show", methods={"GET"})
      */
     public function show(AppClass $appClass): Response
     {
-        return $this->render('app_class/show.html.twig', [
-            'app_class' => $appClass,
-        ]);
+        return $this->handleView($this->view($appClass));
     }
 
     /**
-     * @Route("/{id}/edit", name="app_class_edit", methods={"GET","POST"})
-     */
+     * @param Request  $request
+     * @param AppClass $appClass
+     *
+     * @return Response
+     *
+     * @Route("/{id}/edit", name="app_class_edit", methods={"POST"})
+     *
+     * @SWG\Post(
+     *     path="/app/class/{id}/edit",
+     *     produces={"application/json"},
+     *     @SWG\Parameter(
+     *         name="name",
+     *         in="formData",
+     *         description="name",
+     *         type="string",
+     *     ),
+     *     @SWG\Parameter(
+     *         name="active",
+     *         in="formData",
+     *         description="active",
+     *         type="boolean",
+     *     ),
+     *     @SWG\Parameter(
+     *         name="creationDate",
+     *         in="formData",
+     *         description="creationDate",
+     *         format="yyyy-MM-dd HH:mm",
+     *         type="string",
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Success"
+     *     ),
+     *     @SWG\Response(
+     *         response=400,
+     *         description="form not valid"
+     *     )
+     * )
+     **/
     public function edit(Request $request, AppClass $appClass): Response
     {
         $form = $this->createForm(AppClassType::class, $appClass);
@@ -69,26 +153,34 @@ class AppClassController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('app_class_index');
+            return $this->handleView($this->view(
+                ['status' => 'ok'],
+                Response::HTTP_CREATED
+            ));
         }
 
-        return $this->render('app_class/edit.html.twig', [
-            'app_class' => $appClass,
-            'form' => $form->createView(),
-        ]);
+        return $this->handleView(
+            $this->view($form->getErrors(), 400)
+        );
     }
 
     /**
+     * @param Request  $request
+     * @param AppClass $appClass
+     *
+     * @return Response
+     *
      * @Route("/{id}", name="app_class_delete", methods={"DELETE"})
      */
     public function delete(Request $request, AppClass $appClass): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$appClass->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($appClass);
-            $entityManager->flush();
-        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($appClass);
+        $entityManager->flush();
 
-        return $this->redirectToRoute('app_class_index');
+        return $this->handleView($this->view(
+            ['status' => 'ok'],
+            Response::HTTP_CREATED
+        ));
     }
 }

@@ -1,0 +1,10 @@
+fos_user:
+  db_driver: orm # other valid values are 'mongodb' and 'couchdb'
+  firewall_name: main
+  user_class: AppBundle\Entity\User
+  from_email:
+    address: '%env(resolve:MAILER_ADDRESS)%'
+    sender_name: '%env(resolve:MAILER_USER)%'
+  service:
+    mailer: 'fos_user.mailer.noop'
+  use_flash_notifications: false

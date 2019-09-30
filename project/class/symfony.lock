@@ -81,6 +81,12 @@
     "exsyst/swagger": {
         "version": "v0.4.1"
     },
+    "friendsofsymfony/oauth-server-bundle": {
+        "version": "1.6.2"
+    },
+    "friendsofsymfony/oauth2-php": {
+        "version": "1.2.3"
+    },
     "friendsofsymfony/rest-bundle": {
         "version": "2.2",
         "recipe": {
@@ -92,6 +98,9 @@
         "files": [
             "config/packages/fos_rest.yaml"
         ]
+    },
+    "friendsofsymfony/user-bundle": {
+        "version": "v2.1.2"
     },
     "hoa/compiler": {
         "version": "3.17.08.08"
@@ -356,10 +365,28 @@
             "config/routes.yaml"
         ]
     },
+    "symfony/security-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "e5a0228251d1dd2bca4c8ef918e14423c06db625"
+        },
+        "files": [
+            "config/packages/security.yaml"
+        ]
+    },
     "symfony/security-core": {
         "version": "v4.3.4"
     },
     "symfony/security-csrf": {
+        "version": "v4.3.4"
+    },
+    "symfony/security-guard": {
+        "version": "v4.3.4"
+    },
+    "symfony/security-http": {
         "version": "v4.3.4"
     },
     "symfony/service-contracts": {

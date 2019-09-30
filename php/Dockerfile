@@ -28,7 +28,7 @@ RUN wget https://get.symfony.com/cli/installer -O - | bash && \
 RUN git config --global user.email ${USER_EMAIL}
 RUN git config --global user.name ${USER_NAME}
 
-WORKDIR /var/www
+WORKDIR /usr/src/app/
 
 #COPY project /usr/src/app
 
