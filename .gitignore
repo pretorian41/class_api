@@ -49,7 +49,7 @@
 .idea
 .env
 #webserwer log
-logs/nginx/*
+logs/nginx/*.log
 project/class/vendor/*
 project/class/var/cache/*
 project/class/var/logs/*
