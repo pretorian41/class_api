@@ -2,13 +2,13 @@
 version: "3.7"
 services:
   db:
-    image: mysql:8.0
+    image: hypriot/rpi-mysql
     restart: on-failure
     ports:
       - "3306:3306"
     volumes:
       - /var/www:/var/www
-    command: ['--default-authentication-plugin=mysql_native_password']
+#    command: ['--default-authentication-plugin=mysql_native_password']
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
