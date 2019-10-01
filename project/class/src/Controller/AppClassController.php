@@ -149,6 +149,9 @@ class AppClassController extends AbstractFOSRestController
      **/
     public function edit(Request $request, AppClass $appClass): Response
     {
+        $requestVars = $request->request;
+        $requestVars->set('active', 'true' === $requestVars->get('active') ? true : false);
+        $appClass = new AppClass();
         $form = $this->createForm(AppClassType::class, $appClass);
         $form->handleRequest($request);
 
