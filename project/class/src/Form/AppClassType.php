@@ -25,11 +25,11 @@ class AppClassType extends AbstractType
                 'required'  => true,
             ])
             ->add('active', CheckboxType::class, [
-                'required'  => true,
             ])
             ->add('creationDate', DateTimeType::class, [
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd HH:mm',
+                'empty_data' => new \DateTime('now'),
                 'required'  => true,
             ])
         ;

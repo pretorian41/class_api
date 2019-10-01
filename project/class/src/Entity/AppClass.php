@@ -25,8 +25,6 @@ class AppClass
     private $name;
 
     /**
-     * @Assert\NotBlank
-     *
      * @ORM\Column(type="boolean", nullable=false)
      */
     private $active;
@@ -37,6 +35,14 @@ class AppClass
      * @ORM\Column(type="datetime", nullable=false)
      */
     private $creationDate;
+
+    /**
+     * AppClass constructor.
+     */
+    public function __construct()
+    {
+        $this->active = false;
+    }
 
     /**
      * @return int|null
